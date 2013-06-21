@@ -1,15 +1,16 @@
 <html>
   <head>
-    <script src="//polymer-project.org/polymer.min.js" debug="true"></script>
-    <script src="//enyojs.com/enyo-2.2.0/enyo.js"></script>
+    <script src="polymer.min.js"></script>
+    <script src="enyo.js"></script>
     <script src="enyo-polymer.js"></script>
     <script src="MyKind.js"></script>
     <script>
       function makeGreen() {
         var e = document.getElementById("mykind1");
         e.setAttribute("color", "Green");
-      };
+      }
     </script>
+    <link rel="stylesheet" type="text/css" href="enyo.css">
   </head>
   <body>
     <x-mykind id="mykind1" color="Orange"></x-mykind>
