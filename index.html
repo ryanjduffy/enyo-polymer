@@ -1,18 +1,45 @@
 <html>
-  <head>
-    <script src="//polymer-project.org/polymer.min.js" debug="true"></script>
-    <script src="//enyojs.com/enyo-2.2.0/enyo.js"></script>
-    <script src="enyo-polymer.js"></script>
-    <script src="MyKind.js"></script>
-    <script>
-      function makeGreen() {
-        var e = document.getElementById("mykind1");
-        e.setAttribute("color", "Green");
-      };
-    </script>
-  </head>
-  <body>
-    <x-mykind id="mykind1" color="Orange"></x-mykind>
-    <button onclick="makeGreen()">Make it Green!</button>
-  </body>
+	<head>
+		<script src="//polymer-project.org/polymer.min.js" debug="true"></script>
+		<script src="enyo.js"></script>
+		<script src="enyo-polymer.js"></script>
+		<script src="app.js"></script>
+		<script>
+			/*
+			enyo-polymer.js hooks kind creation to auto-register any kind created after it hooks
+			Because i've bundled enyo, onyx, and layout and included them before the lib,
+			none of those are registered automatically.
+
+			To expose those, call the new API function:
+
+			enyo.registerAsWebComponent(constructor)
+			e.g. enyo.registerAsWebComponent(onyx.Button)
+			*/
+
+			enyo.forEach([onyx.Toolbar, onyx.Button], enyo.registerAsWebComponent);
+
+			function makeGreen() {
+				document.getElementById("mykind1").setAttribute("color", "Green");
+			};
+		</script>
+
+		<link rel="stylesheet" type="text/css" href="enyo.css">
+		<style>
+			/* onyx css assumes DIVs which are display: block by default.
+			Custom elements are not so we need to patch */
+			x-onyx-toolbar {
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<x-onyx-toolbar id="toolbar" style="min-height:30px;">
+			<div style="float:left">Mixing HTML + Enyo</div>
+			<x-onyx-button style="float:right" onclick="alert('you clicked this')">Click Me</x-onyx-button>
+			<x-ex-button style="float:right">Custom Buttom</x-ex-button>
+		</x-onyx-toolbar>
+
+		<x-mykind id="mykind1" color="Orange"></x-mykind>
+		<button onclick="makeGreen()">Make it Green!</button>
+	</body>
 </html>

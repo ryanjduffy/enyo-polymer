@@ -29,3 +29,13 @@ enyo.kind({
         this.setColor("Red");
     }
 });
+
+enyo.kind({
+    name: "ex.Button",
+    kind: "onyx.Button",
+    index: 0,
+    tap: function() {
+        var messages = ["You tapped me", "Clicky Clicky", "Tappy tap tap tap-a-roo"];
+        this.setContent(messages[this.index++%messages.length]);
+    }
+})
