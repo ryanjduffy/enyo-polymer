@@ -1,9 +1,14 @@
 <html>
 	<head>
-		<script src="../polymer-all/platform/platform.js" debug="true"></script>
-		<script src="../enyo/enyo.js"></script>
-		<script src="../onyx/source/package.js"></script>
+		<script src="polymer.min.js"></script>
+        <!-- enyo, onyx, and layout -->
+		<script src="build/enyo.js"></script>
+		<script src="build/app.js"></script>
+        
+        <!-- load the web component adapter -->
 		<script src="enyo-polymer.js"></script>
+        
+        <!-- custom demo stuff -->
 		<script src="app.js"></script>
 		<script>
 			/*
@@ -13,16 +18,22 @@
 
 			To expose those, call the new API function:
 
-			enyo.registerAsWebComponent(constructor)
-			e.g. enyo.registerAsWebComponent(onyx.Button)
+			enyo.registerAsWebComponent(constructor, optionalTagName)
+			e.g. enyo.registerAsWebComponent(ex.MyKind, "x-widget")
 			*/
+            
+            enyo.registerAsWebComponent(onyx.Button);
 
 			function makeGreen() {
 				document.getElementById("mykind1").setAttribute("color", "Green");
 			};
 		</script>
 
-		<link rel="stylesheet" type="text/css" href="enyo.css">
+        <!-- enyo, onyx, and layout CSS -->
+		<link rel="stylesheet" type="text/css" href="build/enyo.css">
+        <link rel="stylesheet" type="text/css" href="build/app.css">
+        
+        <!-- custom demo CSS -->
 		<style>
 			x-hello {
 				display: inline-block;
@@ -31,9 +42,10 @@
 		</style>
 	</head>
 	<body>
-		<x-mykind id="mykind1" color="Orange"></x-mykind>
-		<button onclick="makeGreen()">Make it Green!</button>
-		
+		<x-mykind id="mykind1" color="Orange">
+    	    <x-onyx-button onclick="makeGreen()">Make it Green!</button> 
+		</x-mykind>
+
 		<x-hello><i>Ryan</i></x-hello>
 		<x-hello color="green"><u>Inigo Montoya</u></x-hello>
 	</body>

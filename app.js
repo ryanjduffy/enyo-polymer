@@ -10,10 +10,12 @@ enyo.kind({
         
     },
     components: [
-        {name:"label"},
+        {kind:"onyx.Toolbar", components:[
+            {name:"label"}
+        ]},
         {name:"color", style:"font-weight:bold"},
-        {kind:"Button", content:"Set Color = Red", onclick:"tapped"},
-        {tag:"x-onyx-button", content:"enyo -> polymer -> enyo button"}
+        {kind:"onyx.Button", content:"Set Color = Red", onclick:"red"},
+        {tag:"x-onyx-button", content:"Blue (x-onyx-button element)", onclick:"blue"}
     ],
     create:function() {
         this.inherited(arguments);
@@ -27,17 +29,13 @@ enyo.kind({
     labelChanged:function() {
         this.$.label.setContent(this.label);
     },
-    tapped: function() {
+    red: function() {
         this.setColor("Red");
+    },
+    blue: function() {
+        this.setColor("Blue");
     }
 });
-
-enyo.kind({
-    name:"enyo.Content",
-    components:[
-        {tag:"content"}
-    ]
-})
 
 enyo.kind({
     name: "ex.Button",
@@ -63,7 +61,9 @@ enyo.kind({
     },
     components:[
         {classes:"top", content:"Hello, my name is"},
-        {classes:"name", kind:"enyo.Content"},
+        {classes:"name", components:[
+            {kind:"enyo.Content"}
+        ]},
         {classes:"bottom"},
         {name:"style", kind:"extras.Style", css:{
             ".hello": {"margin":"20px", "border-radius":"40px","border":"3px solid","text-align":"center","overflow":"hidden","max-width":"300px"},

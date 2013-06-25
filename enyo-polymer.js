@@ -16,7 +16,23 @@
         enyo.setDocument(d);
     }
 
-    enyo.registerAsWebComponent = function(ctor, tag) {
+    enyo.registerAsWebComponent = function(ctor, config) {
+        config = enyo.mixin({
+            // because content will only be inserted once, if a kind provides an instance of enyo.Content
+            // injecting another enyo.Content will have no effect (unless the provided is scoped by select)
+            // by making the default true, any kind can be easily wrapped as a web component and only disabled
+            // if the provider wants to ignore any consumer-provided content
+            wrapContent: true,
+            
+            // default tag is the kindName (prefixed by x- and swapping . for -)
+            tag: "x-" + ctor.prototype.kindName.replace(".", "-")
+        }, config);
+        
+        // ensure tag starts with x-
+        if(config.tag.indexOf("x-") !== 0) {
+            config.tag = "x-"+config.tag;
+        }
+        
         var e = Object.create(HTMLElement.prototype);
         e.readyCallback = function() {
 
@@ -30,6 +46,12 @@
                     props[a.name] = a.value;
                 }
             }, this);
+            
+            if(config.wrapContent) {
+                props.components = [
+                    {kind:"enyo.Content"}
+                ];
+            }
             
             // create the enyo instance
             this.enyoInstance = new ctor(props);
@@ -62,24 +84,34 @@
             }
         };
 
-        if(tag) {
-            if(tag.indexOf("x-") !== 0) {
-                tag = "x-" + tag;
-            }
-        } else {
-            tag = "x-" + ctor.prototype.kindName.replace(".", "-");
-        }
-
         // register the enyo kind as a web component
-        document.register(tag.toLowerCase(), {
+        document.register(config.tag.toLowerCase(), {
             prototype: e
         });
-    }
+    };
     
     enyo.kind.features.push(function(ctor, props) {
         if(props.webComponent) {
-            enyo.registerAsWebComponent(ctor, props.webComponent.tag);
+            enyo.registerAsWebComponent(ctor, {
+                tag:props.webComponent.tag,
+                wrapContent:props.webComponent.wrapContent
+            });
         }
         
+    });
+    
+    enyo.kind({
+        name:"enyo.Content",
+        tag: "content",
+        published: {
+            select: null
+        },
+        create: function() {
+            this.inherited(arguments);
+            this.selectChanged();
+        },
+        selectChanged: function() {
+            this.setAttribute("select", this.select);
+        }
     });
 })(window.enyo);
