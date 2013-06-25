@@ -9,10 +9,17 @@
         }
     }
 
-    enyo.registerAsWebComponent = function(ctor) {
+    function connect(doc) {
+        var d = enyo.getDocument();
+        enyo.setDocument(doc);
+        enyo.dispatcher.connect();
+        enyo.setDocument(d);
+    }
+
+    enyo.registerAsWebComponent = function(ctor, tag) {
         var e = Object.create(HTMLElement.prototype);
         e.readyCallback = function() {
-            
+
             // retrieve published enyo properties (including all inherited)
             this.enyoPublished = getPublished(ctor);
             
@@ -23,12 +30,6 @@
                     props[a.name] = a.value;
                 }
             }, this);
-
-            var content = this.innerHTML;
-            if(content) {
-                props.allowHtml = true;
-                props.content = content;
-            }
             
             // create the enyo instance
             this.enyoInstance = new ctor(props);
@@ -39,12 +40,19 @@
                     this.setAttribute(property, this.enyoInstance[property]);
                 }, this);
             }, this);
-            
+
+            var wcProps = enyo.mixin({
+                applyAuthorStyles: true,
+                resetStyleInheritance: false
+            }, this.enyoInstance.webComponent);
+
             // render the instance
-            this.enyoInstance.node = this;
-            this.enyoInstance.generated = true;
-            this.enyoInstance.id = this.id;
-            this.enyoInstance.render();
+            var shadow = this.createShadowRoot();
+            shadow.applyAuthorStyles = wcProps.applyAuthorStyles;
+            shadow.resetStyleInheritance = wcProps.resetStyleInheritance;
+
+            connect(shadow);
+            this.enyoInstance.renderInto(shadow);
         };
 
         // dispatch node attribute changes to the enyo instance
@@ -54,13 +62,24 @@
             }
         };
 
+        if(tag) {
+            if(tag.indexOf("x-") !== 0) {
+                tag = "x-" + tag;
+            }
+        } else {
+            tag = "x-" + ctor.prototype.kindName.replace(".", "-");
+        }
+
         // register the enyo kind as a web component
-        document.register("x-"+ctor.prototype.kindName.replace(".", "-").toLowerCase(), {
+        document.register(tag.toLowerCase(), {
             prototype: e
         });
     }
     
     enyo.kind.features.push(function(ctor, props) {
-        enyo.registerAsWebComponent(ctor);
+        if(props.webComponent) {
+            enyo.registerAsWebComponent(ctor, props.webComponent.tag);
+        }
+        
     });
 })(window.enyo);

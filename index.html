@@ -1,7 +1,8 @@
 <html>
 	<head>
-		<script src="//polymer-project.org/polymer.min.js" debug="true"></script>
-		<script src="enyo.js"></script>
+		<script src="../polymer-all/platform/platform.js" debug="true"></script>
+		<script src="../enyo/enyo.js"></script>
+		<script src="../onyx/source/package.js"></script>
 		<script src="enyo-polymer.js"></script>
 		<script src="app.js"></script>
 		<script>
@@ -16,8 +17,6 @@
 			e.g. enyo.registerAsWebComponent(onyx.Button)
 			*/
 
-			enyo.forEach([onyx.Toolbar, onyx.Button], enyo.registerAsWebComponent);
-
 			function makeGreen() {
 				document.getElementById("mykind1").setAttribute("color", "Green");
 			};
@@ -25,21 +24,17 @@
 
 		<link rel="stylesheet" type="text/css" href="enyo.css">
 		<style>
-			/* onyx css assumes DIVs which are display: block by default.
-			Custom elements are not so we need to patch */
-			x-onyx-toolbar {
-				display: block;
+			x-hello {
+				display: inline-block;
+				width:300px;
 			}
 		</style>
 	</head>
 	<body>
-		<x-onyx-toolbar id="toolbar" style="min-height:30px;">
-			<div style="float:left">Mixing HTML + Enyo</div>
-			<x-onyx-button style="float:right" onclick="alert('you clicked this')">Click Me</x-onyx-button>
-			<x-ex-button style="float:right">Custom Buttom</x-ex-button>
-		</x-onyx-toolbar>
-
 		<x-mykind id="mykind1" color="Orange"></x-mykind>
 		<button onclick="makeGreen()">Make it Green!</button>
+		
+		<x-hello><i>Ryan</i></x-hello>
+		<x-hello color="green"><u>Inigo Montoya</u></x-hello>
 	</body>
 </html>
