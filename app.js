@@ -4,18 +4,16 @@ enyo.kind({
     webComponent: true,
     published: {
         color: "green",
-        label: "Enyo + Polymer - Getting the band back together"
+        label: "Enyo + Polymer"
     },
     events: {
         
     },
     components: [
-        {kind:"onyx.Toolbar", components:[
-            {name:"label"}
-        ]},
+        {tag: "h1", name: "label"},
         {name:"color", style:"font-weight:bold"},
         {kind:"onyx.Button", content:"Set Color = Red", onclick:"red"},
-        {tag:"x-onyx-button", content:"Blue (x-onyx-button element)", onclick:"blue"}
+        //{tag:"onyx-button", content:"Blue (onyx-button element)", onclick:"blue"}
     ],
     create:function() {
         this.inherited(arguments);
@@ -37,18 +35,6 @@ enyo.kind({
     }
 });
 
-enyo.kind({
-    name: "ex.Button",
-    kind: "onyx.Button",
-    index: 0,
-    handlers: {
-        onclick: "clicked"
-    },
-    clicked: function() {
-        var messages = ["You tapped me", "Clicky Clicky", "Tappy tap tap tap-a-roo"];
-        this.setContent(messages[this.index++%messages.length]);
-    }
-});
 
 enyo.kind({
     name:"ex.Hello",
@@ -75,7 +61,6 @@ enyo.kind({
     create: function() {
         this.inherited(arguments);
         this.colorChanged();
-        this.log(enyo);
     },
     colorChanged: function(oldColor) {
         this.$.style.set(".hello", {"border-color": this.color});
